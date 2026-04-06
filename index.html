@@ -346,7 +346,8 @@
 
     /* CHARACTER CARD */
     .character-card {
-      width: 520px;
+      width: 100%;
+      max-width: 520px;
       border: 2px solid var(--brass-dark);
       padding: 22px 36px 22px 52px;
       clip-path: polygon(28px 0, 100% 0, 100% 100%, 28px 100%, 0 50%);
@@ -1087,13 +1088,87 @@
       color: var(--brass-light);
       border-color: var(--brass);
     }
+
+    /* ── TABLE SCROLL WRAPPER ── */
+    .table-wrapper {
+      overflow-x: auto;
+    }
+
     @media (max-width: 768px) {
-       .layout { flex-direction: column; padding: 16px; }
-       .character-card { width: 100%; clip-path: none; }
-       .portrait-container { width: 200px; height: 200px; }
-       .home-wrap { margin: 16px; }
-       table { font-size: 0.6rem; }
+      /* Fix 3: stack layout vertically */
+      .layout {
+        flex-direction: column;
+        padding: 16px;
       }
+
+      /* Fix 3: wrap nav horizontally */
+      nav {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      nav a {
+        font-size: 0.8rem;
+        padding: 8px 12px;
+      }
+
+      /* Fix 2: character card responsive */
+      .character-card {
+        width: 100%;
+        clip-path: none;
+      }
+
+      /* Fix 4: stack content row panels */
+      .content-row {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .desc-panel,
+      .art-panel {
+        width: 100% !important;
+        border: none;
+      }
+
+      /* Fix 5: artifacts grid scaling */
+      .artifacts-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      }
+
+      /* Fix 7: header buttons stack */
+      header {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .login-btn,
+      .theme-toggle {
+        position: static;
+        transform: none;
+      }
+
+      /* Fix 8: diamond/portrait images scale down */
+      .portrait-container {
+        width: 200px;
+        height: 200px;
+      }
+
+      .portrait-container .portrait-wrap {
+        width: 180px;
+        height: 180px;
+      }
+
+      .pathway-symbol {
+        width: 50px;
+        height: 50px;
+      }
+
+      /* General mobile helpers */
+      .home-wrap { margin: 16px; }
+      table { font-size: 0.6rem; }
+      .modal-box { width: 90vw; padding: 24px 20px 20px; }
+    }
     /* ── ARTIFACTS PAGE ── */
     .artifacts-wrap {
       padding: 24px 20px 0;
@@ -1314,7 +1389,7 @@
 
     .login-btn {
       position: absolute;
-      right: 30px;
+      right: 80px;
       top: 50%;
       transform: translateY(-50%);
 
@@ -1371,7 +1446,7 @@
 
   <header>
     <div>
-      <img src="imgs/logo.webp" height="100" style="text-align:center">
+      <img src="imgs/logo.webp" height="200px" style="text-align:center">
     </div>
     <button class="login-btn">Login</button>
     <button class="theme-toggle" id="themeToggle" title="Toggle light/dark mode">
