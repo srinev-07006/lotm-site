@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LoTM</title>
+  <style>
+
+    body {
+        background-color: var(--bg);
+        background-image:
+          radial-gradient(ellipse 80% 50% at 50% -10%, rgba(60,30,100,0.35) 0%, transparent 70%),
+          url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Crect width='60' height='60' fill='none'/%3E%3Cpath d='M0 0h60v60H0z' fill='none' stroke='rgba(100,80,160,0.04)' stroke-width='1'/%3E%3Cpath d='M30 0v60M0 30h60' stroke='rgba(100,80,160,0.03)' stroke-width='.5'/%3E%3C/svg%3E");
+        color: #ccc;
+        font-family: 'Share Tech Mono', monospace;
+        padding: 40px 20px 80px;
+        min-height: 100vh;
+      }
+
+    /* HEADER */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 3px solid #222;
+      padding: 10px 30px;
+    }
+
+    .logo {
+      font-size: 2.2rem;
+      font-weight: bold;
+    }
+
+    .tagline {
+      font-style: italic;
+      font-size: 0.9rem;
+      color: #555;
+      margin-top: 2px;
+    }
+
+    .search-bar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .search-bar select {
+      padding: 4px 8px;
+      border: 1px solid #222;
+    }
+
+    .search-bar input {
+      padding: 4px 10px;
+      border: 1px solid #222;
+      width: 160px;
+    }
+
+    .search-bar button {
+      padding: 4px 10px;
+      border: 1px solid #222;
+      background: #fff;
+      cursor: pointer;
+    }
+
+    /* LAYOUT */
+    .layout {
+      display: flex;
+      padding: 30px;
+      gap: 30px;
+    }
+
+    /* SIDEBAR */
+    nav {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-width: 150px;
+    }
+
+    nav a {
+      display: block;
+      text-decoration: none;
+      color: #111;
+      font-size: 0.95rem;
+      padding: 8px 14px;
+      border: 1px solid #222;
+      clip-path: polygon(0 0, 88% 0, 100% 50%, 88% 100%, 0 100%);
+      background: #f5f5f5;
+    }
+
+    nav a:hover {
+      background: #e0e0e0;
+    }
+
+    /* MAIN */
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 30px;
+    }
+
+    /* PORTRAIT */
+    .portrait-wrap {
+      width: 180px;
+      height: 180px;
+      transform: rotate(45deg);
+      border: 3px solid #222;
+      background: #f0f0f0;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* CHARACTER CARD */
+    .character-card {
+      width: 420px;
+      border: 2px solid #222;
+      padding: 16px 24px;
+      clip-path: polygon(20px 0, 100% 0, 100% 100%, 20px 100%, 0 50%);
+      background: #fafafa;
+    }
+
+    .char-name {
+      font-size: 1.1rem;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .char-desc {
+      font-size: 0.9rem;
+      border-top: 1px solid #aaa;
+      padding-top: 8px;
+      margin-bottom: 10px;
+    }
+
+    .char-quote {
+      font-style: italic;
+      font-size: 0.9rem;
+      color: #444;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <img src="https://s2-12602.game.kspkg.com/udata/pkg/KS-GAME-WEB/nuxt/c7/c7Global/c7_pc_bg.png" height="100" style="text-align:center">
+    <div class="search-bar">
+      <select>
+        <option>Search ▾</option>
+        <option>Characters</option>
+        <option>Sequences</option>
+      </select>
+      <input type="text" placeholder="Search…"/>
+      <button>🔍</button>
+    </div>
+  </header>
+
+  <div class="layout">
+
+    <nav>
+      <a href="#">Characters</a>
+      <a href="#">World Map</a>
+      <a href="#">Sequences</a>
+      <a href="#">Pathways</a>
+    </nav>
+
+    <main>
+      <div class="portrait-wrap">
+        <img src="fool.jpeg" alt="Character"
+        style="transform: rotate(-45deg); width: 140%; height: 140%; object-fit: cover;" />
+      </div>
+
+      <div class="character-card">
+        <div class="char-name">{ Character Name }</div>
+        <div class="char-desc">Character Description</div>
+        <div class="char-quote">" { Character Quote } "</div>
+      </div>
+    </main>
+
+  </div>
+</body>
+</html>

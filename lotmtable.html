@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Pathways | LoTM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cinzel:wght@400;600&family=IM+Fell+English+SC&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        --bg:        #080a10;
+        --surface:   #0d1020;
+        --border:    #2a2440;
+        --border-hi: #6a50a7;
+        --gold:      #c9a84c;
+        --gold-dim:  #7a6230;
+        --text-dim:  #6b6b80;
+        --seq-ls:    #1a1730;
+        --seq-ms:    #151525;
+        --seq-hs:    #130f20;
+        --seq-tg:    #0e0b18;
+        --beyond:    #090810;
+      }
+
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+      body {
+        background: var(--bg);
+        background-image:
+          radial-gradient(ellipse 80% 50% at 50% -10%, rgba(60,30,100,0.35) 0%, transparent 70%),
+          url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Crect width='60' height='60' fill='none'/%3E%3Cpath d='M0 0h60v60H0z' fill='none' stroke='rgba(100,80,160,0.04)' stroke-width='1'/%3E%3Cpath d='M30 0v60M0 30h60' stroke='rgba(100,80,160,0.03)' stroke-width='.5'/%3E%3C/svg%3E");
+        color: #ccc;
+        font-family: 'Share Tech Mono', monospace;
+        padding: 40px 20px 80px;
+        min-height: 100vh;
+      }
+
+      /* ── Title ── */
+      .page-header { text-align: center; margin-bottom: 40px; }
+      .page-header h1 {
+        font-family: 'Cinzel Decorative', serif;
+        font-size: clamp(1.4rem, 3vw, 2.2rem);
+        color: var(--gold);
+        letter-spacing: .12em;
+        text-shadow: 0 0 30px rgba(201,168,76,.4), 0 0 60px rgba(201,168,76,.15);
+        margin-bottom: 6px;
+      }
+      .page-header .subtitle {
+        font-family: 'Cinzel', serif;
+        font-size: .75rem;
+        color: var(--text-dim);
+        letter-spacing: .3em;
+        text-transform: uppercase;
+      }
+      .divider {
+        margin: 14px auto 0;
+        width: 220px;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, var(--gold-dim), var(--gold), var(--gold-dim), transparent);
+      }
+
+      /* ── Wrapper ── */
+      .table-wrapper {
+        overflow-x: auto;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        box-shadow: 0 0 0 1px rgba(106,80,167,.2), 0 8px 60px rgba(0,0,0,.8), inset 0 0 80px rgba(0,0,0,.3);
+      }
+
+      /* ── Table ── */
+      table { border-collapse: collapse; width: 100%; min-width: 1200px; }
+
+      caption {
+        font-family: 'IM Fell English SC', serif;
+        font-size: .85rem;
+        color: var(--gold);
+        letter-spacing: .18em;
+        padding: 18px 0 14px;
+        caption-side: top;
+        background: linear-gradient(180deg, #10091e 0%, var(--surface) 100%);
+        border-bottom: 1px solid var(--border-hi);
+      }
+
+      th, td {
+        border: 1px solid var(--border);
+        padding: 6px 8px;
+        font-size: .72rem;
+        text-align: center;
+        vertical-align: middle;
+        line-height: 1.45;
+      }
+
+      /* ── Header classes ── */
+      .ls  { background: var(--seq-ls); color: #8899cc; font-family: 'Cinzel', serif; font-size: .68rem; letter-spacing: .06em; border-color: var(--border-hi); }
+      .ms  { background: var(--seq-ms); color: #9988bb; font-family: 'Cinzel', serif; font-size: .68rem; letter-spacing: .06em; border-color: var(--border-hi); }
+      .hs  { background: var(--seq-hs); color: #aa88dd; font-family: 'Cinzel', serif; font-size: .68rem; letter-spacing: .06em; border-color: var(--border-hi); }
+      .tg  { background: var(--seq-tg); color: var(--gold); font-family: 'Cinzel', serif; font-size: .68rem; letter-spacing: .06em; border-color: var(--border-hi); }
+      .goo { background: var(--beyond); color: #776688; font-family: 'Cinzel', serif; font-size: .68rem; letter-spacing: .06em; border-color: var(--border-hi); }
+
+      /* Seq number row */
+      tr.seq-row th {
+        font-family: 'Cinzel', serif;
+        font-size: .65rem;
+        letter-spacing: .04em;
+        padding: 8px 6px;
+        border-top: 2px solid var(--border-hi);
+      }
+      tr.seq-row .ls { color: #6a80b8; }
+      tr.seq-row .ms { color: #8878aa; }
+      tr.seq-row .hs { color: #9878cc; }
+      tr.seq-row .tg { color: var(--gold); border-top-color: var(--gold-dim); }
+
+      /* Saints / Angels sub-header */
+      th.saints, th.angels {
+        background: #1c1a2e;
+        color: #b0a0d0;
+        font-family: 'Cinzel', serif;
+        font-size: .68rem;
+        letter-spacing: .06em;
+        border-color: var(--border-hi);
+      }
+
+      /* ── Data rows ── */
+      tbody tr { transition: background 0.18s; }
+      tbody tr:hover td { background: rgba(100,80,160,0.12) !important; filter: brightness(1.2); }
+
+      tr.lotm td { background: rgba(12,8,22,.9); }
+      tr.ga   td { background: rgba(10,10,8,.9); }
+      tr.ed   td { background: rgba(8,10,14,.9); }
+      tr.cod  td { background: rgba(14,8,8,.9); }
+      tr.tw   td { background: rgba(10,5,18,.9); }
+      tr.bh   td { background: rgba(14,8,8,.9); }
+      tr.km   td { background: rgba(10,8,20,.9); }
+      tr.noc  td { background: rgba(8,8,8,.9); }
+      tr.kol  td { background: rgba(8,12,18,.9); }
+
+      /* Beyond columns */
+      td.beyond-cell {
+        background: rgba(20,12,40,.95) !important;
+        color: #a090c0 !important;
+        font-size: .72rem;
+        font-style: italic;
+        border-color: #3a2060;
+        text-shadow: 0 0 12px rgba(160,130,220,0.3);
+      }
+
+      /* Sequence column tinting */
+      td.col-s9, td.col-s8                        { border-left-color: #25234a; }
+      td.col-s7, td.col-s6, td.col-s5             { border-left-color: #2a2050; }
+      td.col-s4, td.col-s3, td.col-s2, td.col-s1 { border-left-color: #3a2070; }
+      td.col-s0 {
+        font-weight: 600;
+        letter-spacing: .04em;
+        border-left: 2px solid rgba(201,168,76,.35);
+        filter: brightness(1.15);
+      }
+
+      /* Group separators */
+      tr.group-sep td, tr.group-sep th { border-top: 2px solid var(--border-hi); }
+
+      /* Scrollbar */
+      .table-wrapper::-webkit-scrollbar       { height: 6px; }
+      .table-wrapper::-webkit-scrollbar-track { background: #0a0810; }
+      .table-wrapper::-webkit-scrollbar-thumb { background: var(--border-hi); border-radius: 3px; }
+
+      /* Beyond highlight on hover */
+      td.beyond-cell.beyond-highlight {
+        background: rgba(106,80,167,0.35) !important;
+        color: #c8b0e8 !important;
+        border-color: #6a50a7 !important;
+        box-shadow: inset 0 0 20px rgba(106,80,167,0.3);
+      }
+
+      .footnote { text-align: center; margin-top: 24px; font-size: .65rem; color: #33304a; letter-spacing: .1em; font-family: 'Cinzel', serif; }
+      /* ── Pathway column ── */
+      td.pathway-cell {
+        background: rgba(5,4,12,.95) !important;
+        border-color: #1a1530;
+        text-align: center;
+        vertical-align: middle;
+        padding: 8px 6px;
+        min-width: 70px;
+        max-width: 80px;
+      }
+
+      .pathway-cell-inner {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .pathway-symbol-img {
+        width: 36px;
+        height: 36px;
+        transform: rotate(45deg);
+        border: 1px solid #3a2060;
+        overflow: hidden;
+        background: rgba(20,14,40,0.9);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+
+      .pathway-symbol-img img {
+        transform: rotate(-45deg);
+        width: 145%;
+        height: 145%;
+        object-fit: cover;
+      }
+
+      .pathway-cell-name {
+        font-family: 'Cinzel', serif;
+        font-size: 0.52rem;
+        letter-spacing: 0.08em;
+        color: #7a6c99;
+        writing-mode: vertical-rl;
+        text-orientation: mixed;
+        transform: rotate(180deg);
+        white-space: nowrap;
+        line-height: 1;
+      }
+
+      th.pathway-head {
+        background: var(--beyond);
+        color: #554466;
+        font-family: 'Cinzel', serif;
+        font-size: .62rem;
+        letter-spacing: .08em;
+        border-color: #1a1530;
+        min-width: 70px;
+      }
+    </style>
+  </head>
+  <body>
+
+    <div class="page-header">
+      <h1>Pathways &amp; Their Groups</h1>
+      <p class="subtitle">Lord of the Mysteries · Sequence Classification</p>
+      <div class="divider"></div>
+    </div>
+
+    <div class="table-wrapper">
+      <table>
+        <caption><b>Pathways and their Groups</b></caption>
+
+        <!-- Header rows — original structure, new classes -->
+        <thead>
+          <tr>
+            <th rowspan="3" class="pathway-head">Pathway</th>
+            <th colspan="2" rowspan="2" class="ls">Low-Sequence</th>
+            <th colspan="3" rowspan="2" class="ms">Mid-Sequence</th>
+            <th colspan="4" class="hs">High-Sequence (Demigod)</th>
+            <th rowspan="2" class="tg">True God</th>
+            <th rowspan="3" class="goo">Sefirah</th>
+            <th rowspan="3" class="goo">Great Old One</th>
+            <th rowspan="3" class="goo">Above the Sequence</th>
+          </tr>
+          <tr>
+            <th colspan="2" class="saints">Saints</th>
+            <th colspan="2" class="angels">Angels</th>
+          </tr>
+          <tr class="seq-row">
+            <th class="ls">Sequence 9</th>
+            <th class="ls">Sequence 8</th>
+            <th class="ms">Sequence 7</th>
+            <th class="ms">Sequence 6</th>
+            <th class="ms">Sequence 5</th>
+            <th class="hs">Sequence 4</th>
+            <th class="hs">Sequence 3</th>
+            <th class="hs">Sequence 2</th>
+            <th class="hs">Sequence 1</th>
+            <th class="tg">Sequence 0</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          <!-- FOOL PATHWAY -->
+          <tr class="lotm group-sep" style="color:#8855ff">
+            <td class="pathway-cell" rowspan="3">
+              <div class="pathway-cell-inner">
+                <div class="pathway-symbol-img"><img src="imgs/symbols/foolsymbol.webp" alt="Fool"></div>
+                <div class="pathway-symbol-img"><img src="imgs/symbols/doorsymbol.webp" alt="Son of Chaos"></div>
+                <div class="pathway-symbol-img"><img src="imgs/symbols/errorsymbol.webp" alt="Son of Chaos"></div>
+              </div>
+            </td>
+            <td class="col-s9">Seer</td>
+            <td class="col-s8">Clown</td>
+            <td class="col-s7">Magician</td>
+            <td class="col-s6">Faceless</td>
+            <td class="col-s5">Marionettist</td>
+            <td class="col-s4">Bizzaro Sorcerer</td>
+            <td class="col-s3">Scholar of Yore</td>
+            <td class="col-s2">Miracle Invoker</td>
+            <td class="col-s1">Attendant of Mysteries</td>
+            <td class="col-s0">Fool</td>
+            <td class="beyond-cell" rowspan="3">Sefirah Castle</td>
+            <td class="beyond-cell" rowspan="3">Lord of The Mysteries</td>
+            <td class="beyond-cell" rowspan="3">Celestial Worthy of Heaven and Earth (former, originator)<br>The Fool Klein Moretti (current, Quasi GOO as of LoTM, Full GOO as of COI)</td>
+          </tr>
+          <tr class="lotm" style="color:#02d4e8">
+            <td class="col-s9">Apprentice</td>
+            <td class="col-s8">Trickmaster</td>
+            <td class="col-s7">Astrologer</td>
+            <td class="col-s6">Scribe</td>
+            <td class="col-s5">Traveler</td>
+            <td class="col-s4">Secrets Sorcerer</td>
+            <td class="col-s3">Wanderer</td>
+            <td class="col-s2">Planeswalker</td>
+            <td class="col-s1">Key of Stars</td>
+            <td class="col-s0">Door</td>
+          </tr>
+          <tr class="lotm" style="color:#888899">
+            <td class="col-s9">Maurauder</td>
+            <td class="col-s8">Swindler</td>
+            <td class="col-s7">Cryptologist</td>
+            <td class="col-s6">Prometheus</td>
+            <td class="col-s5">Dream Stealer</td>
+            <td class="col-s4">Parasite</td>
+            <td class="col-s3">Mentor of Deceit</td>
+            <td class="col-s2">Trojan Horse of Fate</td>
+            <td class="col-s1">Worm of Time</td>
+            <td class="col-s0">Error</td>
+          </tr>
+
+          <!-- GOD ALMIGHTY PATHWAY -->
+          <tr class="ga" style="color:#c8b810">
+            <td class="pathway-cell" rowspan="5">
+              <div class="pathway-cell-inner">
+                <div class="pathway-symbol-img"><img src="imgs/symbols/visionarysymbol.webp" alt="Son of Chaos"></div>
+                <div class="pathway-symbol-img"><img src="imgs/symbols/sunsymbol.webp" alt="God Almighty"></div>
+                <div class="pathway-symbol-img"><img src="imgs/symbols/tyrantsymbol.webp" alt="Son of Chaos"></div>
+                <div class="pathway-symbol-img"><img src="imgs/symbols/shepherdsymbol.webp" alt="Son of Chaos"></div>
+                <div class="pathway-symbol-img"><img src="imgs/symbols/whitetowersymbol.webp" alt="Son of Chaos"></div>
+              </div>
+            </td>
+            <td class="col-s9">Spectator</td>
+            <td class="col-s8">Telpathist</td>
+            <td class="col-s7">Psychiatrist</td>
+            <td class="col-s6">Hypnotist</td>
+            <td class="col-s5">Dreamwalker</td>
+            <td class="col-s4">Manipulator</td>
+            <td class="col-s3">Dream Weaver</td>
+            <td class="col-s2">Discerner</td>
+            <td class="col-s1">Author</td>
+            <td class="col-s0">Visionary</td>
+            <td class="beyond-cell" rowspan="5">Chaos Sea</td>
+            <td class="beyond-cell" rowspan="5">God Almighty</td>
+            <td class="beyond-cell" rowspan="5">Primordial God Almighty (former, originator)<br>Grisha Adam (current)</td>
+          </tr>
+          <tr class="ga group-sep" style="color:#e8c840">
+            <td class="col-s9">Bard</td>
+            <td class="col-s8">Light Suppliant</td>
+            <td class="col-s7">Solar High Priest</td>
+            <td class="col-s6">Notary</td>
+            <td class="col-s5">Priest of Light</td>
+            <td class="col-s4">Unshadowed</td>
+            <td class="col-s3">Justice Mentor</td>
+            <td class="col-s2">Lightseeker</td>
+            <td class="col-s1">White Angel</td>
+            <td class="col-s0">Sun</td>
+          </tr>
+          <tr class="ga" style="color:#3a6acc">
+            <td class="col-s9">Sailor</td>
+            <td class="col-s8">Folk of Rage</td>
+            <td class="col-s7">Seafarer</td>
+            <td class="col-s6">Wind-blessed</td>
+            <td class="col-s5">Ocean Songster</td>
+            <td class="col-s4">Catalysmic Interrer</td>
+            <td class="col-s3">Sea King</td>
+            <td class="col-s2">Calamity</td>
+            <td class="col-s1">Thunder God</td>
+            <td class="col-s0">Tyrant</td>
+          </tr>
+          <tr class="ga" style="color:#cc3333">
+            <td class="col-s9">Secrets Suppliant</td>
+            <td class="col-s8">Listener</td>
+            <td class="col-s7">Shadow Ascetic</td>
+            <td class="col-s6">Rose Bishop</td>
+            <td class="col-s5">Shepherd</td>
+            <td class="col-s4">Black Knight</td>
+            <td class="col-s3">Trinity Templar</td>
+            <td class="col-s2">Profane Presbyter</td>
+            <td class="col-s1">Dark Angel</td>
+            <td class="col-s0">Hanged Man</td>
+          </tr>
+          <tr class="ga" style="color:#2890e8">
+            <td class="col-s9">Reader</td>
+            <td class="col-s8">Student of Ratiocination</td>
+            <td class="col-s7">Detective</td>
+            <td class="col-s6">Polymath</td>
+            <td class="col-s5">Mysticism Magister</td>
+            <td class="col-s4">Prophet</td>
+            <td class="col-s3">Cognizer</td>
+            <td class="col-s2">Wisdom Angel</td>
+            <td class="col-s1">Omniscient Eye</td>
+            <td class="col-s0">White Tower</td>
+          </tr>
+
+          <!-- ETERNAL DARKNESS PATHWAY -->
+          <tr class="ed group-sep" style="color:#5566aa">
+            <td class="pathway-cell" rowspan="3">
+              <div class="pathway-cell-inner">
+                <div class="pathway-symbol-img"><img src="imgs/symbols/darknesssymbol.webp" alt="Eternal Darkness"></div>
+                <div class="pathway-symbol-img"><img src="imgs/symbols/deathsymbol.webp" alt="Son of Chaos"></div>
+                <div class="pathway-symbol-img"><img src="imgs/symbols/twilightgiantsymbol.webp" alt="Son of Chaos"></div>
+              </div>
+            </td>
+            <td class="col-s9">Sleepless</td>
+            <td class="col-s8">Midnight Poet</td>
+            <td class="col-s7">Nightmare</td>
+            <td class="col-s6">Soul Assurer</td>
+            <td class="col-s5">Spirit Warlock</td>
+            <td class="col-s4">Nightwatcher</td>
+            <td class="col-s3">Horror Bishop</td>
+            <td class="col-s2">Servant of Concealment</td>
+            <td class="col-s1">Knight of Misfortune</td>
+            <td class="col-s0">Darkness</td>
+            <td class="beyond-cell" rowspan="3">River of Eternal Darkness</td>
+            <td class="beyond-cell" rowspan="3">Eternal Darkness</td>
+            <td class="beyond-cell" rowspan="3">Celestial Worthy of Heaven and Earth (former)<br>Evernight Goddess Amanises (current)</td>
+          </tr>
+          <tr class="ed" style="color:#44aa33">
+            <td class="col-s9">Corpse Collector</td>
+            <td class="col-s8">Gravedigger</td>
+            <td class="col-s7">Spirit Medium</td>
+            <td class="col-s6">Spirit Guide</td>
+            <td class="col-s5">Gatekeeper</td>
+            <td class="col-s4">Undying</td>
+            <td class="col-s3">Ferryman</td>
+            <td class="col-s2">Death Consul</td>
+            <td class="col-s1">Pale Emperor</td>
+            <td class="col-s0">Death</td>
+          </tr>
+          <tr class="ed" style="color:#c07020">
+            <td class="col-s9">Warrior</td>
+            <td class="col-s8">Pugilist</td>
+            <td class="col-s7">Weapon Master</td>
+            <td class="col-s6">Dawn Paladin</td>
+            <td class="col-s5">Guardian</td>
+            <td class="col-s4">Demon Hunter</td>
+            <td class="col-s3">Silver Knight</td>
+            <td class="col-s2">Glory</td>
+            <td class="col-s1">Hand of God</td>
+            <td class="col-s0">Twilight Giant</td>
+          </tr>
+
+          <!-- CALAMITY OF DESTRUCTION PATHWAY -->
+          <tr class="cod group-sep" style="color:#cc44cc">
+            <td class="pathway-cell" rowspan="2">
+              <div class="pathway-cell-inner">
+                <div class="pathway-symbol-img"><img src="imgs/symbols/demonesssymbol.webp" alt="Calamity of Destruction"></div>
+                <div class="pathway-symbol-img"><img src="imgs/symbols/redpriestsymbol.webp" alt="Son of Chaos"></div>
+              </div>
+            </td>
+            <td class="col-s9">Assassin</td>
+            <td class="col-s8">Instigator</td>
+            <td class="col-s7">Witch</td>
+            <td class="col-s6">Pleasure</td>
+            <td class="col-s5">Affliction</td>
+            <td class="col-s4">Despair</td>
+            <td class="col-s3">Unaging</td>
+            <td class="col-s2">Catastrophe</td>
+            <td class="col-s1">Apocalypse</td>
+            <td class="col-s0">Demoness</td>
+            <td class="beyond-cell" rowspan="2">City of Calamity</td>
+            <td class="beyond-cell" rowspan="2">Calamity of Destruction</td>
+            <td class="beyond-cell" rowspan="2">Primordial God Almighty (former)<br>Salinger (former)</td>
+          </tr>
+          <tr class="cod" style="color:#dd2233">
+            <td class="col-s9">Hunter</td>
+            <td class="col-s8">Provoker</td>
+            <td class="col-s7">Pyromaniac</td>
+            <td class="col-s6">Conspirer</td>
+            <td class="col-s5">Reaper</td>
+            <td class="col-s4">Iron Blooded Knight</td>
+            <td class="col-s3">War Bishop</td>
+            <td class="col-s2">Weather Warlock</td>
+            <td class="col-s1">Conquerer</td>
+            <td class="col-s0">Red Priest</td>
+          </tr>
+
+          <!-- TENEBROUS WORLD PATHWAY -->
+          <tr class="tw group-sep" style="color:#9966cc">
+            <td class="pathway-cell" rowspan="2">
+              <div class="pathway-cell-inner">
+                <div class="pathway-symbol-img"><img src="imgs/symbols/chainedsymbol.webp" alt="Father of Devils"></div>
+                <div class="pathway-symbol-img"><img src="imgs/symbols/abysssymbol.webp" alt="Son of Chaos"></div>
+              </div>
+            </td>
+            <td class="col-s9">Prisoner</td>
+            <td class="col-s8">Lunatic</td>
+            <td class="col-s7">Werewolf</td>
+            <td class="col-s6">Zombie</td>
+            <td class="col-s5">Wraith</td>
+            <td class="col-s4">Puppet</td>
+            <td class="col-s3">Disciple of Silence</td>
+            <td class="col-s2">Ancient Bane</td>
+            <td class="col-s1">Abomination</td>
+            <td class="col-s0">Chained</td>
+            <td class="beyond-cell" rowspan="2">Tenebrous World</td>
+            <td class="beyond-cell" rowspan="2">Father of Devils</td>
+            <td class="beyond-cell" rowspan="2">Mother Tree of Desire (fomer, originator)<br>Primordial God Almighty (former)<br>Dark Side of the Universe Farbauti (current, Quasi GOO)</td>
+          </tr>
+          <tr class="tw" style="color:#882233">
+            <td class="col-s9">Criminal</td>
+            <td class="col-s8">Unwinged Angel</td>
+            <td class="col-s7">Serial Killer</td>
+            <td class="col-s6">Devil</td>
+            <td class="col-s5">Desire Apostle</td>
+            <td class="col-s4">Demon</td>
+            <td class="col-s3">Blatherer</td>
+            <td class="col-s2">Bloody Archduke</td>
+            <td class="col-s1">Filty Monarch</td>
+            <td class="col-s0">Abyss</td>
+          </tr>
+
+          <!-- BROOD HIVE PATHWAY -->
+          <tr class="bh group-sep" style="color:#cc4444">
+            <td class="pathway-cell" rowspan="2">
+              <div class="pathway-cell-inner">
+                <div class="pathway-symbol-img"><img src="imgs/symbols/moonsymbol.webp" alt="Mother of Origin"></div>
+                <div class="pathway-symbol-img"><img src="imgs/symbols/mothersymbol.webp" alt="Son of Chaos"></div>
+              </div>
+            </td>
+            <td class="col-s9">Apothecary</td>
+            <td class="col-s8">Beast Tamer</td>
+            <td class="col-s7">Vampire</td>
+            <td class="col-s6">Potions Professor</td>
+            <td class="col-s5">Scarlet Scholar</td>
+            <td class="col-s4">Shaman King</td>
+            <td class="col-s3">High Summoner</td>
+            <td class="col-s2">Life-Giver</td>
+            <td class="col-s1">Beauty Goddess</td>
+            <td class="col-s0">Moon</td>
+            <td class="beyond-cell" rowspan="2">Brood Hive</td>
+            <td class="beyond-cell" rowspan="2">Mother of Origin</td>
+            <td class="beyond-cell" rowspan="2">Mother Goddess of Depravity (current, originator)</td>
+          </tr>
+          <tr class="bh" style="color:#44bb33">
+            <td class="col-s9">Planter</td>
+            <td class="col-s8">Doctor</td>
+            <td class="col-s7">Harvest Priest</td>
+            <td class="col-s6">Biologist</td>
+            <td class="col-s5">Druid</td>
+            <td class="col-s4">Ancient Alchemist</td>
+            <td class="col-s3">Palbearer</td>
+            <td class="col-s2">Desolate Matriarch</td>
+            <td class="col-s1">Naturewalker</td>
+            <td class="col-s0">Mother</td>
+          </tr>
+
+          <!-- KNOWLEDGE MOOR PATHWAY -->
+          <tr class="km group-sep" style="color:#8844ee">
+            <td class="pathway-cell" rowspan="2">
+              <div class="pathway-cell-inner">
+                <div class="pathway-symbol-img"><img src="imgs/symbols/hermitsymbol.webp" alt="Demon of Knowledge"></div>
+                <div class="pathway-symbol-img"><img src="imgs/symbols/paragonsymbol.webp " alt="Son of Chaos"></div>
+              </div>
+            </td>
+            <td class="col-s9">Mystery Pryer</td>
+            <td class="col-s8">Melee Scholar</td>
+            <td class="col-s7">Warlock</td>
+            <td class="col-s6">Scrolls Professor</td>
+            <td class="col-s5">Cosntellations Master</td>
+            <td class="col-s4">Mysticologist</td>
+            <td class="col-s3">Caliroyant</td>
+            <td class="col-s2">Sage</td>
+            <td class="col-s1">Knowledge Emperor</td>
+            <td class="col-s0">Hermit</td>
+            <td class="beyond-cell" rowspan="2">Knowledge Moor</td>
+            <td class="beyond-cell" rowspan="2">Demon of Knowledge</td>
+            <td class="beyond-cell" rowspan="2">Celestial Master (current, Quasi GOO)</td>
+          </tr>
+          <tr class="km" style="color:#c8a840">
+            <td class="col-s9">Savant</td>
+            <td class="col-s8">Archeologist</td>
+            <td class="col-s7">Appraiser</td>
+            <td class="col-s6">Artisan</td>
+            <td class="col-s5">Astronomer</td>
+            <td class="col-s4">Alchemist</td>
+            <td class="col-s3">Arcane Scholar</td>
+            <td class="col-s2">Knowlege Magister</td>
+            <td class="col-s1">Illuminator</td>
+            <td class="col-s0">Paragon</td>
+          </tr>
+
+          <!-- NATION OF DISORDER / SON OF CHAOS -->
+          <tr class="noc group-sep" style="color:#aaaaaa">
+            <td class="pathway-cell" rowspan="2">
+              <div class="pathway-cell-inner">
+                <div class="pathway-symbol-img"><img src="imgs/symbols/blackemperorsymbol.webp" alt="Son of Chaos"></div>
+                <div class="pathway-symbol-img"><img src="imgs/symbols/justiciarsymbol.webp" alt="Son of Chaos"></div>
+              </div>
+            </td>
+            <td class="col-s9">Lawyer</td>
+            <td class="col-s8">Barbarian</td>
+            <td class="col-s7">Briber</td>
+            <td class="col-s6">Baron of Corruption</td>
+            <td class="col-s5">Mentor of Disorder</td>
+            <td class="col-s4">Earl of the Fallen</td>
+            <td class="col-s3">Frenzied Mage</td>
+            <td class="col-s2">Duke of Entropy</td>
+            <td class="col-s1">Prince of Abolition</td>
+            <td class="col-s0">Black Emperor</td>
+            <td class="beyond-cell" rowspan="2">Nation of Disorder</td>
+            <td class="beyond-cell" rowspan="2">Son of Chaos</td>
+            <td class="beyond-cell" rowspan="2">Son of Chaos (current, originator)<br>Celestial Worthy of Heaven and Earth (former)</td>
+          </tr>
+          <tr class="noc" style="color:#d4b820">
+            <td class="col-s9">Arbiter</td>
+            <td class="col-s8">Sheriff</td>
+            <td class="col-s7">Interrogator</td>
+            <td class="col-s6">Judge</td>
+            <td class="col-s5">Disciplinary Paladin</td>
+            <td class="col-s4">Imperative Mage</td>
+            <td class="col-s3">Chaos Hunter</td>
+            <td class="col-s2">Balancer</td>
+            <td class="col-s1">Hand of Order</td>
+            <td class="col-s0">Justiciar</td>
+          </tr>
+
+          <!-- KEY OF LIGHT -->
+          <tr class="kol group-sep" style="color:#88ddf0">
+            <td class="pathway-cell">
+              <div class="pathway-cell-inner">
+                <div class="pathway-symbol-img"><img src="imgs/symbols/monstersymbol.webp" alt="Key of Light"></div>
+              </div>
+            </td>
+            <td class="col-s9">Monster</td>
+            <td class="col-s8">Robot</td>
+            <td class="col-s7">Lucky One</td>
+            <td class="col-s6">Calamity Priest</td>
+            <td class="col-s5">Winner</td>
+            <td class="col-s4">Misfortune Mage</td>
+            <td class="col-s3">Chaoswalker</td>
+            <td class="col-s2">Soothsayer</td>
+            <td class="col-s1">Snake of Mercury</td>
+            <td class="col-s0">Wheel of Fortune</td>
+            <td class="beyond-cell">Key of Light</td>
+            <td class="beyond-cell">Key of Light</td>
+            <td class="beyond-cell">WIll Ceres (temporarily as a part of Golden Buddha)</td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+    <p class="footnote">· Lord of the Mysteries · Cycle of Iterations · Pathway Registry ·</p>  
+  </body>
+</html>
